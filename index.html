@@ -838,25 +838,11 @@
         </div>
     </div>
 
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1>انضم إلى مجتمع واتساب المميز</h1>
-            <p>استمتع بتجربة تواصل فريدة مع أكثر من 10,000 عضو نشط في مجموعتنا الحصرية. انضم الآن واحصل على مميزات خاصة!</p>
-            <a href="#join" class="btn pulse">سجل الآن مجانًا</a>
-        </section>
-
         <!-- Join Form Section -->
         <section class="form-container" id="join">
             <h2>انضم إلى مجموعتنا الآن</h2>
             <form id="joinForm">
                 <div class="form-group">
-                    <label for="fullName">الاسم الكامل</label>
-                    <input type="text" id="fullName" class="form-control" placeholder="أدخل اسمك الكامل" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف</label>
@@ -890,17 +876,6 @@
                         <input type="tel" id="phoneNumber" class="form-control phone-number" placeholder="رقم الهاتف" required maxlength="14">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="interests">مجالات اهتمامك (اختياري)</label>
-                    <select id="interests" class="form-control" multiple>
-                        <option value="technology">التكنولوجيا</option>
-                        <option value="business">الأعمال</option>
-                        <option value="education">التعليم</option>
-                        <option value="health">الصحة</option>
-                        <option value="entertainment">الترفيه</option>
-                        <option value="sports">الرياضة</option>
-                    </select>
-                </div>
                 <button type="submit" class="btn btn-block">تسجيل الانضمام</button>
             </form>
             <div class="countdown-container" id="countdownContainer">
@@ -908,117 +883,6 @@
                 <div class="countdown-timer" id="countdownTimer">10 ثواني</div>
             </div>
         </section>
-
-        <!-- Features Section -->
-        <section class="features" id="features">
-            <div class="feature-card">
-                <div class="icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>مجتمع نشط</h3>
-                <p>تواصل مع أكثر من 10,000 عضو نشط يتبادلون الأفكار والخبرات يوميًا في مختلف المجالات.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3>بيئة آمنة</h3>
-                <p>مجموعة خاضعة للإشراف المستمر لضمان بيئة آمنة وخالية من المحتوى غير اللائق.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <h3>عروض حصرية</h3>
-                <p>احصل على عروض وتخفيضات حصرية لأعضاء المجموعة فقط من شركائنا التجاريين.</p>
-            </div>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section class="testimonials" id="testimonials">
-            <h2>آراء أعضاء المجموعة</h2>
-            <div class="testimonial-slider">
-                <div class="testimonial-slide active">
-                    <p class="quote">"مجموعة رائعة حقًا! تعرفت على الكثير من الأشخاص المثيرين للاهتمام وحصلت على فرص عمل ممتازة من خلالها."</p>
-                    <div class="author">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="سارة أحمد">
-                        <div class="author-info">
-                            <h4>سارة أحمد</h4>
-                            <p>عضوة منذ 8 أشهر</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-slide">
-                    <p class="quote">"المحتوى المقدم في المجموعة مفيد جدًا، خاصة في مجال عملي. أشكر القائمين على هذه المبادرة الرائعة."</p>
-                    <div class="author">
-                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="محمد خالد">
-                        <div class="author-info">
-                            <h4>محمد خالد</h4>
-                            <p>عضو منذ سنة</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-slide">
-                    <p class="quote">"أفضل مجموعة واتساب انضممت إليها على الإطلاق! المحادثات مثمرة والأجواء محترمة جدًا."</p>
-                    <div class="author">
-                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="نورا سعيد">
-                        <div class="author-info">
-                            <h4>نورا سعيد</h4>
-                            <p>عضوة منذ 5 أشهر</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-controls">
-                    <div class="slider-dot active" onclick="showSlide(0)"></div>
-                    <div class="slider-dot" onclick="showSlide(1)"></div>
-                    <div class="slider-dot" onclick="showSlide(2)"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ Section -->
-        <section class="faq" id="faq">
-            <h2>الأسئلة الشائعة</h2>
-            <div class="accordion">
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>كيف يمكنني الانضمام إلى المجموعة؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>يمكنك الانضمام إلى مجموعتنا بسهولة عن طريق تعبئة النموذج أعلاه ببياناتك الصحيحة، وسيتم إضافتك إلى المجموعة خلال 24 ساعة كحد أقصى.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>هل هناك أي رسوم للانضمام؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>لا، الانضمام إلى مجموعتنا مجاني تمامًا ولا يتطلب أي رسوم أو اشتراكات.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>ما هي قواعد المجموعة؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>نحن نلتزم بمعايير الاحترام المتبادل وعدم نشر محتوى مسيء أو غير لائق. يمنع نشر الإعلانات دون إذن، كما يمنع التطفل على الأعضاء أو انتهاك خصوصياتهم.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>كيف يمكنني الإبلاغ عن مشكلة؟</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>يمكنك التواصل مع المشرفين مباشرة عبر رسالة خاصة في واتساب، أو عن طريق البريد الإلكتروني: support@whatsapp-group.com</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
 
     <!-- Footer -->
     <footer>
