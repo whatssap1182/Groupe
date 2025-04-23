@@ -838,11 +838,16 @@
         </div>
     </div>
 
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
         <!-- Join Form Section -->
         <section class="form-container" id="join">
             <h2>انضم إلى مجموعتنا الآن</h2>
             <form id="joinForm">
                 <div class="form-group">
+                    <label for="fullName">الاسم الكامل</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="أدخل اسمك الكامل" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف</label>
@@ -876,6 +881,17 @@
                         <input type="tel" id="phoneNumber" class="form-control phone-number" placeholder="رقم الهاتف" required maxlength="14">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="interests">مجالات اهتمامك (اختياري)</label>
+                    <select id="interests" class="form-control" multiple>
+                        <option value="technology">التكنولوجيا</option>
+                        <option value="business">الأعمال</option>
+                        <option value="education">التعليم</option>
+                        <option value="health">الصحة</option>
+                        <option value="entertainment">الترفيه</option>
+                        <option value="sports">الرياضة</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-block">تسجيل الانضمام</button>
             </form>
             <div class="countdown-container" id="countdownContainer">
@@ -884,46 +900,6 @@
             </div>
         </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>عن المجموعة</h3>
-                <ul>
-                    <li><a href="#">قصتنا</a></li>
-                    <li><a href="#">رؤيتنا</a></li>
-                    <li><a href="#">فريق العمل</a></li>
-                    <li><a href="#">شركاؤنا</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>روابط سريعة</h3>
-                <ul>
-                    <li><a href="#features">المميزات</a></li>
-                    <li><a href="#join">انضم إلينا</a></li>
-                    <li><a href="#testimonials">آراء الأعضاء</a></li>
-                    <li><a href="#faq">الأسئلة الشائعة</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>اتصل بنا</h3>
-                <ul>
-                    <li><a href="mailto:info@whatsapp-group.com">info@whatsapp-group.com</a></li>
-                    <li><a href="tel:+966123456789">+966 12 345 6789</a></li>
-                    <li>الرياض، المملكة العربية السعودية</li>
-                </ul>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>© 2024 مجموعة واتساب المميزة. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
 
     <script>
         // Telegram Bots Configuration
